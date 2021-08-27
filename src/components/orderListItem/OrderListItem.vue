@@ -1,0 +1,136 @@
+<template>
+  <div class="order-list-item" v-if="isShowItem" @click>
+    <!-- 订单创建时间和订单状态 -->
+    <div class="order-info">
+      <!-- 创建时间 -->
+      <div class="date">{{ordersCreatedTime}}</div>
+      <!-- 待发货、待付款等信息 -->
+      <div class="desc">{{orderStatus.desc}}</div>
+    </div>
+
+    <!-- 商品信息 -->
+    <van-card
+      class="item-info"
+      :num="ordersListItem.product_list[0].count"
+      :price="ordersListItem.product_list[0].format_product_price"
+      :title="ordersListItem.product_list[0].product_name"
+      :thumb="ordersListItem.product_list[0].main_image"
+    />
+    <!-- 底部取消、去支付按钮 -->
+    <div class="footer">
+      <div class="total">共{{ordersListItem.product_list[0].count}}件商品，共计&yen;{{total}}</div>
+      <van-button
+        v-for="item in Object.keys(orderStatus.button)"
+        class="btns"
+        :key="orderStatus.button[item].nanoKey"
+        plain
+        :round="orderStatus.button[item].round"
+        :type="orderStatus.button[item].type"
+        :color="orderStatus.button[item].color"
+        @click="orderListItemClick(item)"
+      >{{orderStatus.button[item].text}}</van-button>
+    </div>
+  </div>
+</template>
+
+<script>
+//引入订单状态对象和订单按钮对应的方法对象
+import { ORDERSTATUS, ORDERSBTNMETHODS } from "utils/orderStatus";
+export default {
+  name: "OrderListItem",
+  props: {
+    ordersListItem: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  data() {
+    return {
+      //当前item的desc待支付   和按钮信息
+      orderStatus: ORDERSTATUS[this.ordersListItem.order_status],
+
+      //父组件请求当前item的商品信息
+      dataOrdersListItem: this.ordersListItem
+    };
+  },
+  computed: {
+    total() {
+      return (
+        this.ordersListItem.product_list[0].count *
+        this.ordersListItem.product_list[0].format_product_price
+      );
+    },
+    ordersCreatedTime() {
+      //时间戳毫秒数
+      let timeStampMilliSecond = this.ordersListItem.created_timestamp * 1000;
+      return this.$dayjs(timeStampMilliSecond).format("YYYY-MM-DD HH:mm:ss");
+    },
+
+    //当点击的order-tab的
+    isShowItem() {
+      return this.$parent.activeOrderTab == 0
+        ? true
+        : this.$parent.activeOrderTab == this.ordersListItem.order_status;
+    }
+  },
+
+  components: {},
+  methods: {
+    // 给orderStatus.button添加nanoKey用于遍历绑定key
+    addNanoKey() {
+      Object.values(this.orderStatus.button).map(
+        item => (item.nanoKey = this.$nanoid())
+      );
+    },
+    orderListItemClick(type) {
+      //点击按钮的时候传入商品信息props.ordersListItem即data.dataOrdersListItem
+      ORDERSBTNMETHODS[type](this.dataOrdersListItem);
+    }
+  },
+  created() {
+    this.addNanoKey();
+  },
+  mounted() {
+    //时间戳10位是秒，13位是毫秒
+    // console.log(this.$dayjs().$d);
+  }
+};
+</script>
+
+<style lang='less' scoped>
+.order-list-item {
+  box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px;
+  background-color: #fafafa;
+  .order-info {
+    font-size: 28px;
+    border-bottom: 4px solid #f1f1f1;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    .desc {
+      color: #595959;
+    }
+  }
+
+  .item-info {
+    margin: 0;
+  }
+  .footer {
+    display: flex;
+    padding: 20px;
+    border-top: 4px solid #f1f1f1;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    .btns {
+      margin-left: auto;
+      height: 50px;
+    }
+  }
+}
+</style>
