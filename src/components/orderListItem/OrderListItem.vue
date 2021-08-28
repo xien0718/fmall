@@ -27,7 +27,7 @@
         :round="orderStatus.button[item].round"
         :type="orderStatus.button[item].type"
         :color="orderStatus.button[item].color"
-        @click="orderListItemClick(item)"
+        @click="orderListItemClick({ordersListItem,item})"
       >{{orderStatus.button[item].text}}</van-button>
     </div>
   </div>
@@ -84,10 +84,21 @@ export default {
         item => (item.nanoKey = this.$nanoid())
       );
     },
-    orderListItemClick(type) {
-      //点击按钮的时候传入商品信息props.ordersListItem即data.dataOrdersListItem
-      ORDERSBTNMETHODS[type](this.dataOrdersListItem);
-    }
+    /**
+     * @desc 商品卡片的按钮点击：去支付等等
+     * @param { Object } btnType 点击的按钮对象名toPay，对应值为{color/nanoKey/round/text/trigger/type}
+     */
+    orderListItemClick(btnType) {
+      //button名要、item也要
+      //根据点击的按钮对象名在orderStatus.js中调用ORDERSBTNMETHODS对象的方法，同时传入当前商品的信息和cb给后端
+      //后端返回cb的调用，cb中有个switch，判断点击的哪个按钮，如果点击的是toPay按钮，则调用封装好的支付方法
+      ORDERSBTNMETHODS[btnType](
+        { btnType, ordersListItem: this.ordersListItem },
+        this.handleBtnClick
+      ); //后端响应哪个按钮的调用方法来处理按钮点击
+    },
+    //
+    handleBtnClick() {}
   },
   created() {
     this.addNanoKey();

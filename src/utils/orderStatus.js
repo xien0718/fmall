@@ -172,8 +172,9 @@ import {
 } from 'vant'
 export const ORDERSBTNMETHODS = {
     async createOrder(data, cb = () => {}) {
-        let res = await orderRequest.createOrder();
+        let res = await orderRequest.createOrder(data);
         if (res && res.errorCode == 0) {
+            return cb();
             Notify({
                 type: "primary",
                 message: "创建订单"
