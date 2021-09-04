@@ -13,40 +13,38 @@ export const ORDERCATEGORY = [{
         desc: '全部',
         icon: 'cashier-o',
         statusCode: 0,
-        activeOrderTab: 0 //订单页当前展示的tab对应的orderList的数组元素orderListItem.order_status
+        orderStatusShowing: 0 //当前活跃的tab正在展示的商品卡片的order.status
     },
     {
         desc: '待付款',
         icon: 'cashier-o',
         statusCode: 1,
-        activeOrderTab: 10
-
+        orderStatusShowing: 10
     },
     {
         desc: '待发货',
         icon: 'logistics',
         statusCode: 2,
-        activeOrderTab: 30
+        orderStatusShowing: 30
 
     },
     {
         desc: '待收货',
         icon: 'send-gift-o',
         statusCode: 3,
-        activeOrderTab: 40
+        orderStatusShowing: 40
     },
     {
         desc: '已完成',
         icon: 'sign',
         statusCode: 4,
-        activeOrderTab: 50
-
+        orderStatusShowing: 50
     },
     {
         desc: '已取消',
         icon: 'sign',
         statusCode: 5,
-        activeOrderTab: 60
+        orderStatusShowing: 60
 
     }
 ]
@@ -134,10 +132,6 @@ export const ORDERSTATUS = {
     //已取消：删除订单、再次购买
     60: {
         desc: '已取消', //描述
-        trigger: [ //点击该按钮触发:删除订单，重新下单
-            'delOrder',
-            'reorder'
-        ],
         button: {
             delOrder: {
                 trigger: 'delOrder', //点击该按钮触发方法:申请售后
@@ -167,92 +161,59 @@ export const ORDERSTATUS = {
 //     delOrder,
 //     reorder
 // }
-import {
-    Notify
-} from 'vant'
 export const ORDERSBTNMETHODS = {
-    async createOrder(data, cb = () => {}) {
+    //商品详情页的立即购买按钮对应的方法
+    async createOrder(data, cb) {
         let res = await orderRequest.createOrder(data);
         if (res && res.errorCode == 0) {
             return cb();
-            Notify({
-                type: "primary",
-                message: "创建订单"
-            });
-
         }
     },
-    async toPay(data) {
+
+    //订单列表页的商品卡片按钮对应的方法
+    //cb是orderListItem中的handleBtnClick，点击不同的按钮触发不同的方法并弹窗提示
+    async toPay(data, cb) {
+        //data.orderListItem是订单页商品卡片展示的商品数据，data.btnType是点击的按钮对象
+        //res是点击按钮发送请求后服务端响应的数据，如果响应结果errorCode为0则说明响应成功，此时调用cb即handleBtnClick弹窗且调用微信支付方法
         let res = await orderRequest.toPay();
-        console.log(data);
-
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "去支付"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
-    async applyForRefund(data, cb = () => {}) {
+    async applyForRefund(data, cb) {
         let res = await orderRequest.applyForRefund();
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "申请退款"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
-    async rushToSendOut(data, cb = () => {}) {
+    async rushToSendOut(data, cb) {
         let res = await orderRequest.rushToSendOut();
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "催发货"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
-    async confirmReceipt(data, cb = () => {}) {
+    async confirmReceipt(data, cb) {
         let res = await orderRequest.confirmReceipt();
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "确认收货"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
-    async applyForAfterSales(data, cb = () => {}) {
+    async applyForAfterSales(data, cb) {
         let res = await orderRequest.applyForAfterSales();
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "申请售后"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
-    async delOrder(data, cb = () => {}) {
+    async delOrder(data, cb) {
         let res = await orderRequest.delOrder();
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "删除订单"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
-    async reorder(data, cb = () => {}) {
+    async reorder(data, cb) {
         let res = await orderRequest.reorder();
-
         if (res && res.errorCode == 0) {
-            Notify({
-                type: "primary",
-                background: '#00b799',
-                message: "再次购买"
-            });
+            return cb && cb(data.btnType, res)
         }
     },
 }

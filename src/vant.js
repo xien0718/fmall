@@ -4,7 +4,8 @@ import 'vant/lib/index.css' // 样式文件需要单独引入
 import Vant from 'vant'
 import {
     Toast,
-    Notify
+    Notify,
+    Dialog
 } from 'vant'
 
 
@@ -12,3 +13,4 @@ import {
 Vue.use(Vant);
 Vue.prototype.$toast = Toast
 Vue.prototype.$notify = Notify
+Vue.prototype.$Dialog = Dialog

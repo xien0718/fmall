@@ -1,18 +1,32 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import a from './a'
-import b from './b'
+import {
+  moduleA
+} from './moduleA'
+import {
+  moduleB
+} from './moduleB'
+
+import {
+  order
+} from './order'
 import * as types from './types'
 
 Vue.use(Vuex)
 // 模块化state
 const modules = {
-  a,
-  b
+  moduleA,
+  moduleB,
+  order
 }
 //  创建store
 const store = new Vuex.Store({
+  plugins: [
+    createPersistedState({
+      key: '$vuexState'
+    })
+  ],
   state: {
     count1: 0,
     user: {
@@ -33,11 +47,7 @@ const store = new Vuex.Store({
 
   },
   modules,
-  plugins: [
-    createPersistedState({
-      key: '$vuex'
-    })
-  ],
+
 })
 
 

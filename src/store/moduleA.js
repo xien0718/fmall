@@ -1,5 +1,5 @@
 //
-const moduleB = {
+export const moduleA = {
   namespaced: true,
   state: {
     count: 0
@@ -12,5 +12,3 @@ const moduleB = {
   },
   actions: {}
 }
-
-export default moduleB
