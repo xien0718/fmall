@@ -12,7 +12,6 @@
 </template>
 
 <script>
-// import { Notify } from "vant";
 export default {
   name: "mainTabbar",
   data() {

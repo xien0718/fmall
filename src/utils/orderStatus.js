@@ -6,7 +6,7 @@
   OrderStateDone = 50,        //交易完成（左：无       右：申请售后）
   OrderStateClose = 60,       //支付超时（左：无       右：重新购买)
 */
-import * as orderRequest from 'network/ordersList'
+import * as orderRequest from 'network/order'
 
 //订单tab分类：全部、待付款、待发货、待收货、已完成、已取消
 export const ORDERCATEGORY = [{
@@ -60,7 +60,7 @@ export const ORDERSTATUS = {
                 text: '立即购买',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
             }
         }
     },
@@ -68,12 +68,21 @@ export const ORDERSTATUS = {
     10: {
         desc: '待付款', //描述
         button: {
+            cancelOrder: {
+                trigger: 'cancelOrder', //点击该按钮触发方法:取消订单
+                text: '取消',
+                type: 'default', //按钮种类
+                color: '#00b799', //按钮颜色
+                round: true, //是否圆角
+                plain: true
+            },
             toPay: {
                 trigger: 'toPay', //点击该按钮触发方法:去支付
                 text: '去支付',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: false
             }
         }
     },
@@ -86,7 +95,8 @@ export const ORDERSTATUS = {
                 text: '申请退款',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: false
             }
         }
     },
@@ -99,7 +109,8 @@ export const ORDERSTATUS = {
                 text: '催发货',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: false
             }
         }
     },
@@ -112,7 +123,8 @@ export const ORDERSTATUS = {
                 text: '确认收货',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: false
             }
         }
     },
@@ -125,7 +137,8 @@ export const ORDERSTATUS = {
                 text: '申请售后',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: false
             }
         }
     },
@@ -138,14 +151,16 @@ export const ORDERSTATUS = {
                 text: '删除订单',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: true
             },
             reorder: {
                 trigger: 'reorder', //点击该按钮触发方法:申请售后
                 text: '再次购买',
                 type: 'info', //按钮种类
                 color: '#00b799', //按钮颜色
-                round: true //是否圆角
+                round: true, //是否圆角
+                plain: false
             }
         }
     }
@@ -173,6 +188,14 @@ export const ORDERSBTNMETHODS = {
     //订单列表页的商品卡片按钮对应的方法
     //cb是orderListItem中的handleBtnClick，点击不同的按钮触发不同的方法并弹窗提示
     async toPay(data, cb) {
+        //data.orderListItem是订单页商品卡片展示的商品数据，data.btnType是点击的按钮对象
+        //res是点击按钮发送请求后服务端响应的数据，如果响应结果errorCode为0则说明响应成功，此时调用cb即handleBtnClick弹窗且调用微信支付方法
+        let res = await orderRequest.toPay();
+        if (res && res.errorCode == 0) {
+            return cb && cb(data.btnType, res)
+        }
+    },
+    async cancelOrder(data, cb) {
         //data.orderListItem是订单页商品卡片展示的商品数据，data.btnType是点击的按钮对象
         //res是点击按钮发送请求后服务端响应的数据，如果响应结果errorCode为0则说明响应成功，此时调用cb即handleBtnClick弹窗且调用微信支付方法
         let res = await orderRequest.toPay();

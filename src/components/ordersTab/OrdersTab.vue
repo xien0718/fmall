@@ -3,7 +3,7 @@
     <!-- 我的订单标题和右箭头 -->
     <div class="title">
       <div class="text">我的订单</div>
-      <van-icon class="icon" name="arrow" @click="toOrdersList" />
+      <van-icon class="icon" name="arrow" @click="toOrder" />
     </div>
     <!-- 订单状态 -->
     <div class="status">
@@ -27,9 +27,9 @@ export default {
   },
   components: {},
   methods: {
-    toOrdersList(query) {
+    toOrder(query) {
       this.$router.push({
-        path: "/ordersList",
+        path: "/order",
         query
       });
     }

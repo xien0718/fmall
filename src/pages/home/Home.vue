@@ -99,9 +99,7 @@ export default {
     this._getSwiper();
     this._getGoodsList();
   },
-  mounted() {
-    console.log(location);
-  }
+  mounted() {}
 };
 </script>
 <style lang='less' scoped>

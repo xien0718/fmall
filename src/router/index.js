@@ -5,7 +5,7 @@ import home from './home'
 import found from './found'
 import user from './user'
 import login from './login'
-import ordersList from './ordersList'
+import order from './order'
 import {
   TOKENKEY
 } from 'utils/config'
@@ -18,7 +18,7 @@ const routes = [
   ...found,
   ...user,
   ...login,
-  ...ordersList
+  ...order
 ]
 
 // 创建路由对象

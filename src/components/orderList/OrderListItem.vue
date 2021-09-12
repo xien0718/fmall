@@ -1,5 +1,5 @@
 <template>
-  <div class="order-list-item">
+  <div class="order-list-item" @click="toOrderDetail">
     <!-- 订单创建时间和订单状态 -->
     <div class="order-info">
       <!-- 创建时间 -->
@@ -11,23 +11,25 @@
     <!-- 商品信息 -->
     <van-card
       class="item-info"
-      :num="orderListItem.product_list[0].count"
-      :price="orderListItem.product_list[0].format_product_price"
-      :title="orderListItem.product_list[0].product_name"
-      :thumb="orderListItem.product_list[0].main_image"
+      v-for="(item,index) in orderListItem.product_list"
+      :key="index"
+      :num="item.count"
+      :price="item.format_product_price"
+      :title="item.product_name"
+      :thumb="item.main_image"
     />
     <!-- 底部取消、去支付按钮 -->
     <div class="footer">
-      <div class="total">共{{orderListItem.product_list[0].count}}件商品，共计&yen;{{total}}</div>
+      <div class="total">共{{orderListItem.product_list.length}}件商品，共计&yen;{{total}}</div>
       <van-button
         v-for="item in Object.keys(itemDescBtn.button)"
         class="btns"
         :key="itemDescBtn.button[item].nanoKey"
-        plain
+        :plain="itemDescBtn.button[item].plain"
         :round="itemDescBtn.button[item].round"
         :type="itemDescBtn.button[item].type"
         :color="itemDescBtn.button[item].color"
-        @click="orderListItemClick(item)"
+        @click.stop="orderListItemClick(item)"
       >{{itemDescBtn.button[item].text}}</van-button>
     </div>
   </div>
@@ -67,9 +69,9 @@ export default {
   },
   computed: {
     total() {
-      return (
-        this.orderListItem.product_list[0].count *
-        this.orderListItem.product_list[0].format_product_price
+      return this.orderListItem.product_list.reduce(
+        (a, b) => a + b.count * b.format_product_price,
+        0
       );
     },
     ordersCreatedTime() {
@@ -107,6 +109,13 @@ export default {
             type: "primary",
             background: "#00b799",
             message: "去支付"
+          });
+          break;
+        case "cancelOrder":
+          this.$notify({
+            type: "primary",
+            background: "#00b799",
+            message: "订单已取消"
           });
           break;
         case "applyForRefund":
@@ -159,6 +168,13 @@ export default {
           });
           break;
       }
+    },
+    //点击商品卡片跳转至订单页商品详情
+    toOrderDetail() {
+      this.$router.push({
+        path: "/orderitemdetail",
+        query: this.orderListItem
+      });
     }
   },
   created() {
@@ -180,7 +196,7 @@ export default {
   background-color: #fafafa;
   .order-info {
     font-size: 28px;
-    border-bottom: 4px solid #f1f1f1;
+    border-bottom: 4px solid #e0e0e0;
     padding: 20px;
     display: flex;
     justify-content: space-between;
@@ -188,20 +204,22 @@ export default {
       color: #595959;
     }
   }
-
   .item-info {
     margin: 0;
+    border-bottom: 4px solid #e0e0e0;
   }
   .footer {
     display: flex;
     padding: 20px;
-    border-top: 4px solid #f1f1f1;
     font-size: 28px;
     display: flex;
     align-items: center;
-    .btns {
-      margin-left: auto;
+    button {
+      margin-left: 10px;
       height: 50px;
+    }
+    button:first-of-type {
+      margin-left: auto;
     }
   }
 }
