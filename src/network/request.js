@@ -139,13 +139,11 @@ const checkErrorCode = response => {
 
 //设置默认timeout和baseURL
 const timeout = 60000 // 超时时间 默认1分钟
-const baseURL = 'http://localhost:3333'
 
 //封装axios实例为request方法
 function request(config) {
   const instance = axios.create({
     timeout,
-    baseURL
   })
   // 发送请求前的处理
   instance.interceptors.request.use(config => {
