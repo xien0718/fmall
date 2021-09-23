@@ -21,12 +21,14 @@ const {
   resApplyForAfterSales,
   resDelOrder,
   resReorder,
-  resOrderDetailData
+  resOrderDetailData,
+  resUpdateUserInfo
 } = require('./src/mock/order')
 const autoprefixer = require('autoprefixer');
 const pxtorem = require('postcss-pxtorem');
 const bodyParser = require('body-parser'); //该插件用于服务端获取客户端发送请求传递的参数
 module.exports = {
+  lintOnSave: false,
   configureWebpack: {
     //别名
     resolve: {
@@ -79,7 +81,7 @@ module.exports = {
       app.post('/mock/order/delorder', resDelOrder)
       app.post('/mock/order/reorder', resReorder)
       app.post('/mock/order/resorderdetaildata', resOrderDetailData)
-
+      app.post('/mock/order/requestupdateuserinfo', resUpdateUserInfo)
       //
     }
   },

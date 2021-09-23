@@ -7,14 +7,25 @@
     <!-- 用户头像、用户昵称、购物车按钮 -->
     <div class="personal">
       <!-- 头像 -->
-      <div class="avatar">
-        <van-image fit="cover" round width="80" height="80" :src="user.avatar" />
+      <div class="avatar" @click="toUserProfile">
+        <van-image
+          fit="cover"
+          round
+          width="80"
+          height="80"
+          :src="user.avatar"
+        />
       </div>
       <!-- 昵称 -->
-      <div class="nick-name">{{user.nick_name}}</div>
+      <div class="nick-name" @click="toUserProfile">{{ user.nick_name }}</div>
       <!-- 购物车 -->
       <div class="cart">
-        <van-icon class="cart-icon" name="shopping-cart-o" color="#ffffff" badge="0" />
+        <van-icon
+          class="cart-icon"
+          name="shopping-cart-o"
+          color="#ffffff"
+          badge="0"
+        />
       </div>
     </div>
     <!-- 商品类型：收花日历和近期福利 -->
@@ -40,21 +51,26 @@ export default {
     return {
       goodsTypes: [
         { title: "收花日历", iconName: "notes-o", color: "#00b799" },
-        { title: "近期福利", iconName: "bag-o", color: "#00b799" }
-      ]
+        { title: "近期福利", iconName: "bag-o", color: "#00b799" },
+      ],
     };
   },
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user"]),
   },
   components: {
     NavBar,
     GoodsTypes,
     OrdersTab,
-    Cell
+    Cell,
   },
-  methods: {},
-  mounted() {}
+  methods: {
+    //跳转至个人资料页
+    toUserProfile() {
+      this.$router.push({ path: "/userprofile" });
+    },
+  },
+  mounted() {},
 };
 </script>
 
@@ -81,8 +97,6 @@ export default {
       background-color: #47a899;
       padding: 5px 50px;
       margin-left: auto;
-    }
-    .cart-icon {
     }
   }
   .goods-types {

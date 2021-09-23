@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     count1: 0,
     user: {
       name: 'leo',
-      age: 11
+      age: 11,
+      birthday: '1970/01/01'
     },
 
   },
@@ -39,9 +40,18 @@ const store = new Vuex.Store({
 
   },
   mutations: { // 只能同步
+    //更新用户信息
     updateUserInfo(state, payload) {
       state.user = payload
+    },
+    //更新用户生日
+    updateUserBirthday(state, payload) {
+      state.user.birthday = payload
+    },
+    updateUserNickname(state, payload) {
+      state.user.nick_name = payload
     }
+
   },
   actions: { // 处理异步 ajax请求 文件流等
 

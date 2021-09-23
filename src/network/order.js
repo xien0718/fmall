@@ -98,6 +98,17 @@ const getOrderDetailData = data => request({
     method: 'post',
     data
 })
+
+
+/**
+ * @desc 客户端用户信息更新后向服务端发送请求，更新数据库中的信息
+ */
+const requestUpdateUserInfo = data => request({
+    url: '/mock/order/requestupdateuserinfo',
+    method: 'post',
+    data
+})
+
 export {
     getOrderListData,
     createOrder,
@@ -109,5 +120,6 @@ export {
     applyForAfterSales,
     delOrder,
     reorder,
-    getOrderDetailData
+    getOrderDetailData,
+    requestUpdateUserInfo
 }

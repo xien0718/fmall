@@ -21,7 +21,8 @@
       round
       type="info"
       @click="clickToLogin"
-    >立即登录</van-button>
+      >立即登录</van-button
+    >
   </div>
 </template>
 
@@ -36,7 +37,7 @@ import * as config from "utils/config";
 export default {
   name: "Login",
   components: {
-    FormValidate
+    FormValidate,
   },
   data() {
     return {
@@ -45,13 +46,14 @@ export default {
       //登录账号密码
       loginInfo: {
         uname: "",
-        pwd: ""
+        pwd: "",
       },
       //定义账号密码正则
       reg: {
-        uname: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-        pwd: [/^[A-Z][A-Za-z\d_-~\+\/\\\@\#\$\%\^\&]{5,15}$/, /\d/]
-      }
+        uname:
+          /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+        pwd: [/^[A-Z][A-Za-z\d_-~\+\/\\\@\#\$\%\^\&]{5,15}$/, /\d/],
+      },
     };
   },
   computed: {
@@ -62,10 +64,10 @@ export default {
           this.$refs.uname.promptType == 1 && this.$refs.pwd.promptType == 1
         );
       }
-    }
+    },
   },
   created() {
-    window.addEventListener("keyup", e => {
+    window.addEventListener("keyup", (e) => {
       console.log(e);
       if (e.keyCode == 13) {
         this.clickToLogin();
@@ -83,9 +85,14 @@ export default {
       let res = await login(loginData);
       //res.errorCode为0则说明账号存在且密码匹配，登录成功，此时保存token和用户信息到本地存储
       if (res && res.errorCode == 0) {
-        localStorage.setItem(config.TOKENKEY, res.data.token);
-        localStorage.setItem(config.USERINFO, res.data.user);
-        localStorage.setItem(config.USERID, res.data.user.id);
+        //将birthday转换为2020/11/07格式再存储到vuex和localStorage中
+        //毫秒数原本是字符串，*1隐式转换成数字
+        res.data.user.birthday = new Date(
+          res.data.user.birthday * 1
+        ).toLocaleDateString();
+        localStorage.setItem(config.TOKENKEY, JSON.stringify(res.data.token));
+        localStorage.setItem(config.USERINFO, JSON.stringify(res.data.user));
+        localStorage.setItem(config.USERID, JSON.stringify(res.data.user.id));
 
         //更新store中的用户信息
         this.updateUserInfo(res.data.user);
@@ -105,8 +112,8 @@ export default {
       if (!this.isDisabled) {
         this._login();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

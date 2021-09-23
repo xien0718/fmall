@@ -8,6 +8,7 @@
       :type="btn.type"
       :color="btn.color"
       class="btns"
+      :key="index"
     >{{btn.text}}</van-button>
   </div>
 </template>
