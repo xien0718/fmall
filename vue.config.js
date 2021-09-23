@@ -46,6 +46,8 @@ module.exports = {
     }
   },
   devServer: {
+    //关闭host检查，保证魔法隧道可以访问
+    disableHostCheck: true,
     //每次在3333端口启动服务，不会占用默认8080端口
     port: 3333,
     //相当于const app=express(),app.get或app.post
@@ -83,7 +85,14 @@ module.exports = {
       app.post('/mock/order/resorderdetaildata', resOrderDetailData)
       app.post('/mock/order/requestupdateuserinfo', resUpdateUserInfo)
       //
-    }
+    },
+    //设置跨域
+    proxy: {
+      "/mock/*": {
+        target: 'http://localhost:3333',
+        changeOrigin: true
+      }
+    },
   },
   css: {
     loaderOptions: {
