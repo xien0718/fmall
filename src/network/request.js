@@ -1,9 +1,11 @@
 import axios from 'axios'
 import router from 'router'
+
 import {
   Toast
 } from 'vant'
 import * as sysConfig from '../utils/config'
+import { isWxBrowser } from '../utils/wx-config'
 
 
 
@@ -42,7 +44,8 @@ const addParams = config => {
   let userId = 'userId' // 用户id
   let deviceId = 'h5' // 设备类型
 
-  let params = {
+  //如果是微信浏览器，就不添加userid和设备类型
+  let params = isWxBrowser() ? {} : {
     userId,
     deviceId
   }
@@ -139,11 +142,10 @@ const checkErrorCode = response => {
 
 //设置默认timeout和baseURL
 const timeout = 60000 // 超时时间 默认1分钟
-
 //封装axios实例为request方法
 function request(config) {
   const instance = axios.create({
-    timeout,
+    timeout
   })
   // 发送请求前的处理
   instance.interceptors.request.use(config => {

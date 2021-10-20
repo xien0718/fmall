@@ -10,13 +10,41 @@
       <van-cell is-link title="修改头像" @click="changeAvatarShow = true" />
       <van-action-sheet
         v-model="changeAvatarShow"
-        :actions="changeAvatar"
         cancel-text="取消"
         close-on-click-action
-        @cancel="onCancel"
-        @select="reviseAvatar"
-      />
+      >
+        <!-- 拍照 -->
+        <label>
+          <div class="take-photos" @touchstart="pressDown" @touchend="pressUp">
+            拍照
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            capture="camera"
+            v-show="false"
+            @change="takePhotos"
+          />
+        </label>
+        <!-- 从相册选择 -->
+        <label>
+          <div
+            class="choose-in-album"
+            @touchstart="pressDown"
+            @touchend="pressUp"
+          >
+            从相册选择
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            v-show="false"
+            @change="chooseInAlbum"
+          />
+        </label>
+      </van-action-sheet>
     </div>
+
     <!-- 修改昵称 -->
     <div class="revise-nickname">
       <van-cell is-link title="修改昵称" @click="displayReviseNickname" />
@@ -114,7 +142,7 @@ export default {
     async _requestUpdateUserInfo(data) {
       let res = await requestUpdateUserInfo(data);
       if (res && res.errorCode == 0) {
-        console.log(res);
+        // console.log(res);
       }
     },
     //调用vuex.mutations方法更新用户生日
@@ -127,16 +155,55 @@ export default {
     backToUser() {
       this.$router.back();
     },
+    //取消
+    onCancel() {},
     //弹出层
     showPopup() {
       this.show = true;
     },
-    //拍照、从相册选择
-    onCancel() {
-      Toast("取消");
+    //拍照
+    takePhotos(e) {
+      let _this = this;
+      let file = e.target.files[0];
+      if (window.FileReader) {
+        let reader = new FileReader();
+        if (file) {
+          reader.readAsDataURL(file);
+          reader.addEventListener("load", function (e) {
+            console.log(e.target.result);
+            let res = e.target.result;
+            _this.saveOperation("avatar", res);
+          });
+        }
+      }
     },
-    //修改头像
-    reviseAvatar() {},
+    //相册选择
+    chooseInAlbum(e) {
+      let _this = this;
+      let file = e.target.files[0];
+      if (window.FileReader) {
+        let reader = new FileReader();
+        if (file) {
+          reader.readAsDataURL(file);
+          reader.addEventListener("load", function (e) {
+            console.log(e.target.result);
+            let res = e.target.result;
+            _this.saveOperation("avatar", res);
+          });
+        }
+      }
+    },
+    //touchstart添加的样式
+    pressDown(e) {
+      this.changeAvatarShow = false;
+      e.target.style.backgroundColor = "#f2f3f5";
+      // this.style.backgroundColor = "#f2f3f5";
+    },
+    //touchend添加的样式
+    pressUp(e) {
+      e.target.style.backgroundColor = "#ffffff";
+      // this.style.backgroundColor = "#f2f3f5";
+    },
     //修改性别
     reviseSex(value) {
       let res = value.name == "男" ? "1" : "2";
@@ -205,6 +272,12 @@ export default {
   .revise-avatar {
     padding-left: 25px;
     display: flex;
+    .take-photos,
+    .choose-in-album {
+      text-align: center;
+      padding: 28px 32px;
+      font-size: 32px;
+    }
     .van-image {
       background-color: #fff;
       flex: 1 0 auto;

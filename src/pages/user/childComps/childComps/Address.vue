@@ -1,6 +1,9 @@
 <template>
   <div class="address">
-    <div class="default-message">请添加收货地址</div>
+    <nav-bar>
+      <van-icon slot="left" name="arrow-left" @click="toUserProfile" />
+      <div slot="mid">收货地址</div>
+    </nav-bar>
     <van-button
       type="primary"
       class="add-address"
@@ -11,20 +14,29 @@
   </div>
 </template>
 <script>
+import NavBar from "components/navbar/Navbar";
 export default {
   name: "Address",
-  components: {},
+  components: {
+    NavBar,
+  },
   data() {
     return {};
   },
   computed: {},
   watch: {},
   methods: {
+    //去用户档案页面
+    toUserProfile() {
+      this.$router.back();
+    },
+    //去添加收货地址页面
     toAddAddress() {
       this.$router.push({
         path: "/addaddress",
       });
     },
+    //
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

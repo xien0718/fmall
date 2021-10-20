@@ -7,9 +7,13 @@
     </div>
     <!-- 订单状态 -->
     <div class="status">
-      <div class="status-item" v-for="item in orderCategory" :key="item.statusCode">
+      <div
+        class="status-item"
+        v-for="item in orderCategory"
+        :key="item.statusCode"
+      >
         <van-icon class="icon" :name="item.icon" badge="0" />
-        <div class="desc">{{item.desc}}</div>
+        <div class="desc">{{ item.desc }}</div>
       </div>
     </div>
   </div>
@@ -22,19 +26,18 @@ export default {
   data() {
     return {
       //订单分类
-      orderCategory: [...Object.values(ORDERCATEGORY).slice(1, 5)]
+      orderCategory: [...Object.values(ORDERCATEGORY).slice(1, 5)],
     };
   },
   components: {},
   methods: {
-    toOrder(query) {
+    toOrder() {
       this.$router.push({
         path: "/order",
-        query
       });
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 

@@ -46,10 +46,11 @@ module.exports = {
     }
   },
   devServer: {
+    //相应数据的服务端主机为192
+    port: 3333,
     //关闭host检查，保证魔法隧道可以访问
     disableHostCheck: true,
     //每次在3333端口启动服务，不会占用默认8080端口
-    port: 3333,
     //相当于const app=express(),app.get或app.post
     before(app) {
       app.use(bodyParser.json()); //数据JSON类型
@@ -88,10 +89,26 @@ module.exports = {
     },
     //设置跨域
     proxy: {
+      //当请求url为/mock/xxx时，会自动将请求的(协议+域名+端口)修改为target
       "/mock/*": {
-        target: 'http://localhost:3333',
+        target: 'http://43946u1m30.qicp.vip',
         changeOrigin: true
+      },
+      "^/sns": {//当请求url以/sns开头,使用如下代理
+        //将请求url的协议域名端口替换成target的值，即代理后完整的请求地址为：target的值+请求url
+        target: `https://api.weixin.qq.com`,
+        ws: true,//websocket
+        changeOrigin: true,//是否跨域
+        pathRewrite: {}//url无需重写直接拼接
       }
+      // '^/api': {
+      //   target: 'http://learn-vue.natapp1.cc',
+      //   ws: true,
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/api': ''
+      //   }
+      // },
     },
   },
   css: {

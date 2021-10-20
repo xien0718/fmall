@@ -1,8 +1,8 @@
 <template>
-  <div class="">
+  <div class="add-address">
     <!-- 头部 -->
     <nav-bar>
-      <van-icon slot="left" name="arrow-left" />
+      <van-icon slot="left" name="arrow-left" @click="toAddress" />
       <div slot="mid">添加收货地址</div>
     </nav-bar>
     <van-address-edit
@@ -13,12 +13,12 @@
       :search-result="searchResult"
       :area-columns-placeholder="['请选择', '请选择', '请选择']"
       @save="onSave"
-      @delete="onDelete"
       @change-detail="onChangeDetail"
     />
   </div>
 </template>
 <script>
+import { areaList } from "@vant/area-data";
 import NavBar from "components/navbar/Navbar";
 export default {
   name: "AddAddress",
@@ -35,10 +35,7 @@ export default {
   watch: {},
   methods: {
     onSave() {
-      Toast("save");
-    },
-    onDelete() {
-      Toast("delete");
+      this.$toast("save");
     },
     onChangeDetail(val) {
       if (val) {
@@ -51,6 +48,10 @@ export default {
       } else {
         this.searchResult = [];
       }
+    },
+    //返回地址页
+    toAddress() {
+      this.$router.back();
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -67,4 +68,33 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.add-address {
+  background-color: #ffffff;
+
+  .van-address-edit {
+    border-radius: 5px;
+    margin: 0 auto;
+    width: 92%;
+    box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
+    /deep/.van-button--danger {
+      background-color: #00b799;
+      border: 1px solid #00b799;
+    }
+  }
+
+  /deep/.van-switch--on {
+    background-color: #00b799;
+  }
+  /deep/.van-address-edit__buttons {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+  }
+  /deep/.van-button--round {
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+}
 </style>

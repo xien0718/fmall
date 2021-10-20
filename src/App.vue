@@ -9,20 +9,15 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
 import Tabbar from "components/tabbar/Tabbar";
 export default {
   name: "App",
   components: {
-    Tabbar
+    Tabbar,
   },
-  computed: {
-    ...mapState(["count1"])
-  },
+  computed: {},
   mounted() {},
-  methods: {
-    ...mapMutations(["increment"])
-  }
+  methods: {},
 };
 </script>
 

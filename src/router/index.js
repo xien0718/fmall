@@ -30,8 +30,8 @@ const router = new VueRouter({
 // 守卫函数
 router.beforeEach((to, from, next) => {
   //从a路由跳转到b路由，to就是b，from就是a
-  console.log('to', to);
-  console.log('from', from);
+  // console.log('to', to);
+  // console.log('from', from);
   //修改当前活跃的页面title，如果活跃路由的meta.title没有值就用mall
   document.title = to.meta.title || 'mall'
   //next调用的时候不传参数，则会跳转至to对应的路由，
