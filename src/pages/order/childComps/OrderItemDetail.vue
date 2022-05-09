@@ -86,8 +86,8 @@ export default {
   name: "OrderItemDetail",
   data() {
     return {
-      orderListItem: "",
-      orderStatus: ORDERSTATUS
+      orderListItem: "", //根据点击的order_id请求到的商品数据
+      orderStatus: ORDERSTATUS //商品的order_id对应的：描述(0对应立即购买、10对应待付款)、按钮内容、按钮类型、按钮颜色、按钮圆角、点击按钮(申请退款、催发货等)触发的方法
     };
   },
   computed: {

@@ -20,7 +20,7 @@ export default {
   },
   components: {},
   methods: {},
-  mounted() {},
+  mounted() {}
 };
 </script>
 
@@ -31,6 +31,8 @@ export default {
   text-align: center;
   align-items: center;
   font-size: 42px;
+  box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   .left {
     width: 120px;
   }

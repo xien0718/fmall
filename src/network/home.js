@@ -17,7 +17,9 @@ const getSwiper = () => request({
     url: `/mock/home/getswiper`,
     method: 'post'
 })
+
+
 export {
     getGoodsList,
-    getSwiper
+    getSwiper,
 }

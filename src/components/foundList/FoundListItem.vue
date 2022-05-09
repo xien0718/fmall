@@ -58,7 +58,7 @@ export default {
 <style lang='less' scoped>
 .found-list-item {
   flex: 1 0 auto;
-  margin-bottom: 40px;
+  margin: 0 20px 40px;
   box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border-radius: 20px;

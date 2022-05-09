@@ -19,7 +19,6 @@ import { mapState, mapMutations } from "vuex";
 export default {
   name: "OrderList",
   props: ["activeTab"],
-
   data() {
     return {
       active: 0 //订单页当前活跃的tab

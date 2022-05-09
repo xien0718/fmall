@@ -7,19 +7,20 @@
   OrderStateClose = 60,       //支付超时（左：无       右：重新购买)
 */
 import * as orderRequest from 'network/order'
+import router from '../router';
 
 //订单tab分类：全部、待付款、待发货、待收货、已完成、已取消
 export const ORDERCATEGORY = [{
         desc: '全部',
         icon: 'cashier-o',
         statusCode: 0,
-        orderStatusShowing: 0 //当前活跃的tab正在展示的商品卡片的order.status
+        orderStatusShowing: 0 //当为0时，展示所有的orderListItem
     },
     {
         desc: '待付款',
         icon: 'cashier-o',
         statusCode: 1,
-        orderStatusShowing: 10
+        orderStatusShowing: 10 //当为10时，展示orderStatus为10的orderListItem
     },
     {
         desc: '待发货',
@@ -177,66 +178,70 @@ export const ORDERSTATUS = {
 //     reorder
 // }
 export const ORDERSBTNMETHODS = {
-    //商品详情页的立即购买按钮对应的方法
-    async createOrder(data, cb) {
+    //点击以后向服务端发送购买信息(下单时间、商品信息、配送信息),服务端响应订单号
+    //点击填写订单页面的提交订单按钮、触发该方法
+    async createOrder(data) {
         let res = await orderRequest.createOrder(data);
         if (res && res.errorCode == 0) {
-            return cb();
+
         }
     },
 
     //订单列表页的商品卡片按钮对应的方法
     //cb是orderListItem中的handleBtnClick，点击不同的按钮触发不同的方法并弹窗提示
     async toPay(data, cb) {
-        //data.orderListItem是订单页商品卡片展示的商品数据，data.btnType是点击的按钮对象
+        //点击去支付时候先检查有无订单号server-number简称sn，如果有则直接跳转支付页面，没有则给后台发请求创建订单号，再跳转到支付页面
+        data.orderListItem.order_sn ? router.push('/cashierDesk') : createOrder()
+        //data.orderListItem是订单页商品卡片展示的商品数据，data.btn是点击的按钮对象
         //res是点击按钮发送请求后服务端响应的数据，如果响应结果errorCode为0则说明响应成功，此时调用cb即handleBtnClick弹窗且调用微信支付方法
+
         let res = await orderRequest.toPay();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async cancelOrder(data, cb) {
-        //data.orderListItem是订单页商品卡片展示的商品数据，data.btnType是点击的按钮对象
+        //data.orderListItem是订单页商品卡片展示的商品数据，data.btn是点击的按钮对象
         //res是点击按钮发送请求后服务端响应的数据，如果响应结果errorCode为0则说明响应成功，此时调用cb即handleBtnClick弹窗且调用微信支付方法
-        let res = await orderRequest.toPay();
+        let res = await orderRequest.cancelOrder();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async applyForRefund(data, cb) {
         let res = await orderRequest.applyForRefund();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async rushToSendOut(data, cb) {
         let res = await orderRequest.rushToSendOut();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async confirmReceipt(data, cb) {
         let res = await orderRequest.confirmReceipt();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async applyForAfterSales(data, cb) {
         let res = await orderRequest.applyForAfterSales();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async delOrder(data, cb) {
         let res = await orderRequest.delOrder();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
     async reorder(data, cb) {
         let res = await orderRequest.reorder();
         if (res && res.errorCode == 0) {
-            return cb && cb(data.btnType, res)
+            return cb && cb(data.btn, res)
         }
     },
 }

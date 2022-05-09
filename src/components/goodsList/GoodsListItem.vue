@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-list-item">
+  <div class="goods-list-item" @click="itemClick">
     <img :src="goodsListItem.base_info.main_image" alt />
     <h2 class="name">{{goodsListItem.base_info.product_name}}</h2>
     <h2 class="price">&yen;{{goodsListItem.base_info.format_sale_price}}</h2>
@@ -21,7 +21,16 @@ export default {
     return {};
   },
   components: {},
-  methods: {},
+  methods: {
+    itemClick() {
+      this.$router.push({
+        path: "/detail",
+        query: {
+          item_id: this.goodsListItem.base_info.item_id
+        }
+      });
+    }
+  },
   mounted() {}
 };
 </script>

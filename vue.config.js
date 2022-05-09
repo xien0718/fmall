@@ -22,28 +22,28 @@ const {
   resDelOrder,
   resReorder,
   resOrderDetailData,
-  resUpdateUserInfo
+  resUpdateUserInfo,
 } = require('./src/mock/order')
+const {
+  resGoodsDetail
+} = require('./src/mock/detail')
 const autoprefixer = require('autoprefixer');
 const pxtorem = require('postcss-pxtorem');
 const bodyParser = require('body-parser'); //该插件用于服务端获取客户端发送请求传递的参数
 module.exports = {
+
   lintOnSave: false,
-  configureWebpack: {
-    //别名
-    resolve: {
-      alias: {
-        //使用名：resolve(对应的文件夹)
-        'assets': '@/assets',
-        'components': '@/components',
-        'mock': '@/mock',
-        'pages': '@/pages',
-        'router': '@/router',
-        'utils': '@/utils',
-        'store': '@/store',
-        'network': '@/network'
-      }
-    }
+  //在chainWebpack中配置别名
+  chainWebpack: config => {
+    config.resolve.alias
+      .set('assets', '@/assets')
+      .set('components', '@/components')
+      .set('mock', '@/mock')
+      .set('pages', '@/pages')
+      .set('router', '@/router')
+      .set('utils', '@/utils')
+      .set('store', '@/store')
+      .set('network', '@/network')
   },
   devServer: {
     //相应数据的服务端主机为192
@@ -61,6 +61,7 @@ module.exports = {
       //当客户端请求为post，且url为第一个参数，则执行第二个参数，响应json数据
       app.post('/mock/home/getswiper', resSwiper)
       app.post('/mock/home/getgoods', resGoodsList)
+
 
       // 用户页相关mock 接口
       app.get('/mock/user/logout', resLogout)
@@ -85,21 +86,24 @@ module.exports = {
       app.post('/mock/order/reorder', resReorder)
       app.post('/mock/order/resorderdetaildata', resOrderDetailData)
       app.post('/mock/order/requestupdateuserinfo', resUpdateUserInfo)
-      //
+
+      //响应商品详情页数据/
+      app.get('/mock/detail/getgoodsdetail', resGoodsDetail)
+
     },
     //设置跨域
     proxy: {
       //当请求url为/mock/xxx时，会自动将请求的(协议+域名+端口)修改为target
-      "/mock/*": {
-        target: 'http://43946u1m30.qicp.vip',
-        changeOrigin: true
-      },
-      "^/sns": {//当请求url以/sns开头,使用如下代理
+      // "/mock/*": {
+      //   target: 'http://43946u1m30.qicp.vip',
+      //   changeOrigin: true
+      // },
+      "^/sns": { //当请求url以/sns开头,使用如下代理
         //将请求url的协议域名端口替换成target的值，即代理后完整的请求地址为：target的值+请求url
         target: `https://api.weixin.qq.com`,
-        ws: true,//websocket
-        changeOrigin: true,//是否跨域
-        pathRewrite: {}//url无需重写直接拼接
+        ws: true, //websocket
+        changeOrigin: true, //是否跨域
+        pathRewrite: {} //url无需重写直接拼接
       }
       // '^/api': {
       //   target: 'http://learn-vue.natapp1.cc',
@@ -124,5 +128,14 @@ module.exports = {
         ]
       }
     }
-  }
+  },
+  configureWebpack: config => {
+    // 11-02配置vux失败，弃用vux
+    // vuxLoader.merge(config, {
+    //   plugins: ['vux-ui', {
+    //     name: 'less-theme',
+    //     path: './src/theme.less'
+    //   }]
+    // })
+  },
 }

@@ -58,6 +58,6 @@ export default {
 
 <style lang='less' scoped>
 .found {
-  padding: 0 20px 105px;
+  padding-bottom: 105px;
 }
 </style>

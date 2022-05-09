@@ -91,32 +91,40 @@ export default {
     },
     /**
      * @desc 商品卡片的按钮点击：去支付等等
-     * @param { Object } btnType 点击的按钮对象名toPay，对应值为{color/nanoKey/round/text/trigger/type}
+     * @param { Object } btn 点击的按钮对象名toPay，对应值为{color/nanoKey/round/text/trigger/type}
      */
-    orderListItemClick(btnType) {
+    orderListItemClick(btn) {
       //根据点击的按钮对象名在orderStatus.js中调用ORDERSBTNMETHODS对象的方法，同时传入当前商品的信息和cb给后端
       //后端返回cb的调用，cb中有个switch，判断点击的哪个按钮，如果点击的是toPay按钮，则调用封装好的支付方法
-      ORDERSBTNMETHODS[btnType](
-        { btnType, orderListItem: this.orderListItem },
+      ORDERSBTNMETHODS[btn](
+        { btn, orderListItem: this.orderListItem },
         this.handleBtnClick
       ); //后端响应哪个按钮的调用方法来处理按钮点击
     },
     //根据点击的按钮触发orderStatus.js中的方法
-    handleBtnClick(btnType, res) {
-      switch (btnType) {
+    handleBtnClick(btn, res) {
+      switch (btn) {
         case "toPay":
-          this.$notify({
-            type: "primary",
-            background: "#00b799",
-            message: "去支付"
-          });
+          //跳转到收银台页面
+          this.$router.push({ path: "/cashierdesk" });
           break;
         case "cancelOrder":
-          this.$notify({
-            type: "primary",
-            background: "#00b799",
-            message: "订单已取消"
-          });
+          this.$Dialog
+            .confirm({
+              message: "确定取消该订单？取消后将错过优惠价格",
+              cancelButtonText: "我再想想"
+            })
+            .then(() => {
+              this.$notify({
+                type: "primary",
+                background: "#00b799",
+                message: "订单已取消"
+              });
+            })
+            .catch(() => {
+              // on cancel
+            });
+
           break;
         case "applyForRefund":
           this.$notify({

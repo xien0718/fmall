@@ -8,12 +8,14 @@
       :type="btn.type"
       :color="btn.color"
       class="btns"
-      :key="index"
+      :key="btn.text"
+      @click="handleFooterClick(btn)"
     >{{btn.text}}</van-button>
   </div>
 </template>
 
 <script>
+import { ORDERBTNMETHODS } from "utils/orderStatus";
 export default {
   name: "OrderDetailFooter",
   props: {
@@ -29,7 +31,10 @@ export default {
   },
   computed: {},
   components: {},
-  methods: {},
+  methods: {
+    //处理order-detail页面底部的按钮点击
+    handleFooterClick(btn) {}
+  },
   mounted() {}
 };
 </script>

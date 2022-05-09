@@ -13,21 +13,17 @@ import Tabbar from "components/tabbar/Tabbar";
 export default {
   name: "App",
   components: {
-    Tabbar,
+    Tabbar
   },
   computed: {},
   mounted() {},
-  methods: {},
+  methods: {}
 };
 </script>
 
 <style lang="less" scoped>
-//样式中设置的都是pc端的px，移动端实际px要除以2
+//样式中设置的都是pc端的px，移动端实际px要除以2   #00b799
 @import "assets/css/resset.css";
-#app {
-  // height: 100vh;
-  background-color: #f8f8f8;
-  // box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
-  // color="#00b799"
-}
+@import "//at.alicdn.com/t/font_2894940_6mtid8ammhy.css";
+@import "assets/css/iconfont.css";
 </style>

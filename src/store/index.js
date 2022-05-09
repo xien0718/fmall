@@ -51,7 +51,6 @@ const store = new Vuex.Store({
     updateUserNickname(state, payload) {
       state.user.nick_name = payload
     }
-
   },
   actions: { // 处理异步 ajax请求 文件流等
 
