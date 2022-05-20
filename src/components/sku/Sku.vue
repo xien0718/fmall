@@ -24,22 +24,44 @@
         </div>
       </div>
     </div>
+    <div>库存：{{ show_stock }}</div>
+    <div>价格：{{ show_price }}</div>
   </div>
 </template>
 
 <script>
 import { spec, sku } from "utils/sku";
+import { count_skuComb_SP } from "utils/sku填充方法的逻辑";
 export default {
   name: "Sku",
   data() {
     return {
-      sku: [],
+      count_skuComb_SP_res: {}, //所有商品数据  的  所有组合  的 价格和库存
+      min_price: 0,
+      max_price: 0,
+      sku: {},
       spec: [],
-      selectSpec: {}, //用来存储 所有已选择的规格值spec_value的 对象
+      selectSpec: {}, //用来存储 所有已选择的spec_value 对象
+      //假如选择了红色，则selectSpec:{ '颜色':'红色' ， '套餐':'' , '内存':'' }
     };
   },
   components: {},
-  computed: {},
+  computed: {
+    show_stock() {
+      return this.count_skuComb_SP_res[Object.values(this.selectSpec).join(";")]
+        .stock;
+    },
+    show_price() {
+      let comb_prices =
+        this.count_skuComb_SP_res[Object.values(this.selectSpec).join(";")]
+          .prices;
+      this.min_price = Math.min.apply(null, comb_prices);
+      this.max_price = Math.max.apply(null, comb_prices);
+      return this.min_price == this.max_price
+        ? `${this.min_price}`
+        : `${this.min_price}~${this.max_price}`;
+    },
+  },
   created() {
     this.sku = sku;
     // 根据规格数据的spec_key数量创建slectSpec
@@ -60,10 +82,18 @@ export default {
         }),
       };
     });
+
+    //根据所有商品数据获取所有的组合的价格和库存
+    this.count_skuComb_SP_res = count_skuComb_SP(this.sku);
+    console.log(this.count_skuComb_SP_res);
+    let prices = Object.values(this.sku).map((item) => item.price);
+    this.max_price = Math.max.apply(null, prices);
+    this.min_price = Math.min.apply(null, prices);
+    // this.min_price = Object.values(this.count_skuComb_SP_res).map();
   },
   methods: {
     /**
-     * @desc 判断spec_value是否可选
+     * @desc 检验：传入的规格键值 与 已选的规格键值 组合后，能否与商品匹配，能则return true，不能则return false
      * @param key {String} 点击的规格键spec_key
      * @param value {String} 点击的规格值spec_value
      * @returns {Boolean} flag是否可以被选中
@@ -71,21 +101,19 @@ export default {
     isAble(key, value) {
       //把this.selectSpec深拷贝，里面存储的是所有已选择的spec_value
       let copySelectSpec = JSON.parse(JSON.stringify(this.selectSpec));
-      //把点击的规格值spec_value赋给点击的规格键spec_key
       copySelectSpec[key] = value;
+      let skuKeys = Object.keys(this.sku);
+      let skuKeys_inStock = skuKeys.filter(
+        //取出有库存的商品
+        (item) => this.sku[item].stock !== 0
+      );
 
-      //假设已经选择了颜色：紫色，套餐：套餐四，内存：未选择，
-      //copySelectSpec = { '颜色':'紫色','套餐':'套餐四','内存':'' }
-
-      //第一次循环：创建计数器i=0，spec.length=3，item.skuItem = ["红色", "套餐一", "128G"]
-      //第一次循环中的第一次循环：copySelectSpec=['颜色']='紫色'，走if，再判断["红色", "套餐一", "128G"]中是否包含'紫色'，不包含，此时i不等于3，结束第一次循环中的第一次循环，
-      //第一次循环中的第二次循环：copySelectSpec=['套餐']='套餐一'，走if，再判断["红色", "套餐一", "128G"]中是否包含'套餐一'，包含，i=i+1=1，此时i不等于3，结束第一次循环中的第二次循环
-      let flag = this.sku.some((item) => {
+      let flag = skuKeys_inStock.some((item) => {
         let i = 0;
         for (let k in copySelectSpec) {
           if (
             copySelectSpec[k] != "" &&
-            item.skuItem.includes(copySelectSpec[k])
+            item.split(";").includes(copySelectSpec[k]) //字符串先转数组，再判断已选则的规格值是否在其中
           ) {
             i++;
           } else if (copySelectSpec[k] == "") {
@@ -94,6 +122,21 @@ export default {
         }
         return i == spec.length;
       });
+
+      // let flag = this.sku.some((item) => {
+      //   let i = 0;
+      //   for (let k in copySelectSpec) {
+      //     if (
+      //       copySelectSpec[k] != "" &&
+      //       item.skuItem.includes(copySelectSpec[k])
+      //     ) {
+      //       i++;
+      //     } else if (copySelectSpec[k] == "") {
+      //       i++;
+      //     }
+      //   }
+      //   return i == spec.length;
+      // });
       return flag;
     },
     /**
@@ -107,46 +150,43 @@ export default {
      */
     changeSpec(key, value, able) {
       if (!able) return;
-      //按钮逻辑：
-      //1.如果该spec_value已经被选中，即存在于selectSpec中，则点击取消选中
-      //实现：
-      //在已经选择的规格selectSpec中，点击的spec_key对应的值是否等于点击的spec_value,如果等于说明该spec_value已经被选中，此时点击应该取消选中，从selectSpec中删除
       if (this.selectSpec[key] === value) {
         this.selectSpec[key] = "";
-        //2.如果spec_value没有被选中，不存在于selectSpec中，则点击
       } else {
         this.selectSpec[key] = value;
       }
-      //首先执行isAble('颜色','红色')、isAble('颜色','紫色')、isAble('颜色','白色')、isAble('颜色','黑色')
 
-      //然后执行isAble('套餐','套餐一')、isAble('套餐','套餐二')、isAble('套餐','套餐三')、isAble('套餐','套餐四')
-
-      //最后执行isAble('存储','64G')、isAble('存储','128G')、isAble('存储','256G')
       this.spec.forEach((item) => {
-        //item是
-        //{"spec_key":"颜色",
-        //"spec_value_all":[
-        //    {
-        //        "spec_value":"红色",
-        //        "able":true
-        //  },
-        //  {
-        //      "spec_value":"紫色",
-        //      "able":true
-        //  },
-        //  {
-        //      "spec_value":"白色",
-        //      "able":true
-        //  },
-        //  {
-        //      "spec_value":"黑色",
-        //      "able":true
-        //  }
-        //]}
         item.spec_value_all.forEach((its) => {
           //its是{ "spec_value":"红色","able":true }
           its.able = this.isAble(item.spec_key, its.spec_value);
         });
+        //首先执行isAble('颜色','红色')、isAble('颜色','紫色')、isAble('颜色','白色')、isAble('颜色','黑色')
+
+        //然后执行isAble('套餐','套餐一')、isAble('套餐','套餐二')、isAble('套餐','套餐三')、isAble('套餐','套餐四')
+
+        //最后执行isAble('存储','64G')、isAble('存储','128G')、isAble('存储','256G')
+
+        //item是
+        //{  "spec_key":"颜色",
+        //   "spec_value_all":[
+        //    {
+        //        "spec_value":"红色",
+        //        "able":true
+        //    },
+        //    {
+        //      "spec_value":"紫色",
+        //      "able":true
+        //    },
+        //    {
+        //      "spec_value":"白色",
+        //      "able":true
+        //    },
+        //    {
+        //      "spec_value":"黑色",
+        //      "able":true
+        //    }
+        //]}
       });
     },
   },
@@ -154,7 +194,7 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .spec-item {
   display: inline-block;
   margin-right: 10px;

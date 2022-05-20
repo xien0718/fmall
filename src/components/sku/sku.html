@@ -25,26 +25,30 @@
             <label>运营商：</label>
             <input type="button" class="sku selected" value="电信">
             <input type="button" class="sku" value="移动">
+
+
             <input type="button" class="sku" value="联通">
         </div>
     </div>
     <div id="result">库存：10<br>价格：100</div>
 
 
+    <script src="./sku填充方法的逻辑.js">
 
+    </script>
 
     <script
         src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script id="rendered-js">
+    <!-- <script id="rendered-js">
         // 获得对象的key
         function getObjKeys(obj) {
             if (obj !== Object(obj)) {
                 throw new TypeError('Invalid object');
             }
-            var keys = [];
-            for (var key in obj) {
+            let keys = [];
+            for (let key in obj) {
                 if (Object.prototype.hasOwnProperty.call(obj, key)) {
                     keys[keys.length] = key;
                 }
@@ -52,15 +56,15 @@
             return keys;
         }
         function arrayCombine(targetArr) {
-            var resultArr = [];
-            for (var n = 0; n <= targetArr.length; n++) {
+            let resultArr = [];
+            for (let n = 0; n <= targetArr.length; n++) {
                 if (window.CP.shouldStopExecution(0)) break;
-                var flagArrs = getFlagArrs(targetArr.length, n);
+                let flagArrs = getFlagArrs(targetArr.length, n);
                 while (flagArrs.length) {
                     if (window.CP.shouldStopExecution(1)) break;
-                    var flagArr = flagArrs.shift();
-                    var combArr = Array(targetArr.length);
-                    for (var i = 0; i < targetArr.length; i++) {
+                    let flagArr = flagArrs.shift();
+                    let combArr = Array(targetArr.length);
+                    for (let i = 0; i < targetArr.length; i++) {
                         if (window.CP.shouldStopExecution(2)) break;
                         if (flagArr[i]) {
                             combArr[i] = targetArr[i];
@@ -73,10 +77,10 @@
         }
         // 从m中取n的所有组合
         function getFlagArrs(m, n) {
-            var flagArrs = [],
+            let flagArrs = [],
                 flagArr = [],
                 isEnd = false;
-            for (var i = 0; i < m; i++) {
+            for (let i = 0; i < m; i++) {
                 if (window.CP.shouldStopExecution(3)) break;
                 flagArr[i] = i < n ? 1 : 0;
             } window.CP.exitedLoop(3);
@@ -85,17 +89,17 @@
             if (n && m > n) {
                 while (!isEnd) {
                     if (window.CP.shouldStopExecution(4)) break;
-                    var leftCnt = 0;
-                    for (var i = 0; i < m - 1; i++) {
+                    let leftCnt = 0;
+                    for (let i = 0; i < m - 1; i++) {
                         if (window.CP.shouldStopExecution(5)) break;
                         if (flagArr[i] == 1 && flagArr[i + 1] == 0) {
-                            for (var j = 0; j < i; j++) {
+                            for (let j = 0; j < i; j++) {
                                 if (window.CP.shouldStopExecution(6)) break;
                                 flagArr[j] = j < leftCnt ? 1 : 0;
                             } window.CP.exitedLoop(6);
                             flagArr[i] = 0;
                             flagArr[i + 1] = 1;
-                            var aTmp = flagArr.concat();
+                            let aTmp = flagArr.concat();
                             flagArrs.push(aTmp);
                             if (aTmp.slice(-n).join('').indexOf('0') == -1) {
                                 isEnd = true;
@@ -109,16 +113,16 @@
             return flagArrs;
         }
         function initSKU(sku) {
-            var resultSKU = [];
-            var skuKeys = getObjKeys(sku);
-            for (var i in skuKeys) {
-                var skuKey = skuKeys[i]; // 获取一条SKU的key
-                var skuData = sku[skuKey]; // 获取一条SKU的相关数据
-                var skuKeyAttrs = skuKey.split(';'); // 获取SKU的key的属性数组
-                var combArr = arrayCombine(skuKeyAttrs);
-                for (var j = 0; j < combArr.length; j++) {
+            let resultSKU = [];
+            let skuKeys = getObjKeys(sku);
+            for (let i in skuKeys) {
+                let skuKey = skuKeys[i]; // 获取一条SKU的key
+                let skuData = sku[skuKey]; // 获取一条SKU的相关数据
+                let skuKeyAttrs = skuKey.split(';'); // 获取SKU的key的属性数组
+                let combArr = arrayCombine(skuKeyAttrs);
+                for (let j = 0; j < combArr.length; j++) {
                     if (window.CP.shouldStopExecution(7)) break;
-                    var key = combArr[j].join(';');
+                    let key = combArr[j].join(';');
                     if (resultSKU[key]) {
                         resultSKU[key].count += skuData.count;
                         resultSKU[key].prices.push(skuData.price);
@@ -135,7 +139,7 @@
         }
         // 渲染DOM
         function initDOM(key) {
-            var html = '';
+            let html = '';
             $(key).each(function (index, el) {
                 html += '<div>';
                 html += '<label>' + this.name + '：</label>';
@@ -148,24 +152,24 @@
         }
         // 显示库存和价格
         function showCountAndPrice(resultSKU) {
-            var sku = [];
+            let sku = [];
             $('#sku div').each(function (index, el) {
                 sku.push($(this).children('.selected').val() || '');
             });
             sku = sku.join(';');
-            var maxPrice = Math.max.apply(Math, resultSKU[sku].prices);
-            var minPrice = Math.min.apply(Math, resultSKU[sku].prices);
+            let maxPrice = Math.max.apply(Math, resultSKU[sku].prices);
+            let minPrice = Math.min.apply(Math, resultSKU[sku].prices);
             $('#result').html('库存：' + resultSKU[sku].count + '<br>' + '价格：' + (maxPrice > minPrice ? minPrice + '-' + maxPrice : maxPrice));
         }
         $(function () {
             // 属性集
-            var key = [
+            let key = [
                 { name: '颜色', item: ['黑', '金', '白'] },
                 { name: '内存', item: ['16G', '32G'] },
                 { name: '运营商', item: ['电信', '移动', '联通'] }];
 
             // 数据集
-            var sku = {
+            let sku = {
                 '黑;16G;电信': { price: 100, count: 10 },
                 '黑;16G;移动': { price: 101, count: 11 },
                 '黑;16G;联通': { price: 102, count: 0 },
@@ -186,7 +190,7 @@
                 '白;32G;联通': { price: 117, count: 27 }
             };
 
-            var resultSKU = initSKU(sku);
+            let resultSKU = initSKU(sku);
             initDOM(key);
             showCountAndPrice(resultSKU);
             $('#sku input[type=button]:not(:disabled)').click(function (event) {
@@ -195,13 +199,12 @@
             });
         });
       //# sourceURL=pen.js
-    </script>
+    </script> -->
 
 
 
     <script
         src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRefreshCSS-4793b73c6332f7f14a9b6bba5d5e62748e9d1bd0b5c52d7af6376f3d1c625d7e.js"></script>
-    <script src="./skutest.js"></script>
 
 
 

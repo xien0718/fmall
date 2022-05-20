@@ -1,5 +1,9 @@
 <template>
   <div>
+    <nav-bar>
+      <van-icon slot="left" name="arrow-left" @click="backToHome" />
+      <div slot="mid">商品详情</div>
+    </nav-bar>
     <!-- <sku-final></sku-final> -->
     <sku></sku>
     <!-- <div class="goods-item-info">{{goodsItemInfo.base_info.product_name}}</div> -->
@@ -34,10 +38,11 @@
 </template>
 
 <script>
-import SkuFinal from "components/sku/SkuFinal";
+// import SkuFinal from "components/sku/SkuFinal";
 import Sku from "components/sku/Sku";
 import { getGoodsDetail } from "network/detail";
 import { regGetParams } from "utils/getParams";
+import NavBar from "components/navbar/Navbar";
 export default {
   name: "Detail",
   data() {
@@ -228,8 +233,9 @@ export default {
     };
   },
   components: {
-    SkuFinal,
+    // SkuFinal,
     Sku,
+    NavBar,
   },
   created() {
     //当详情页面加载的时候请求对应商品的数据
@@ -264,6 +270,10 @@ export default {
       console.log(skuData);
 
       this.$router.push({ path: "/fillorder" });
+    },
+    //返回首页
+    backToHome() {
+      this.$router.back();
     },
   },
   mounted() {},

@@ -80,25 +80,47 @@ function getFlagArrs(m, n) {
 
 //skuKeys所有存在且有库存的属性组合：
 function initSKU(sku) {
-    var resultSKU = [];
+    var resultSKU = {};
     var skuKeys = getObjKeys(sku);
     for (var i in skuKeys) {
-        var skuKey = skuKeys[i]; // 获取一条SKU的key
-        var skuData = sku[skuKey]; // 获取一条SKU的相关数据
-        var skuKeyAttrs = skuKey.split(';'); // 获取SKU的key的属性数组
+        //skuKeys=['黑；16G；电信'，'黑；16G；移动'，'黑；16G；联通',...,'白；32G；联通']
+        var skuKey = skuKeys[i]; // skuKey是sku的键
+        var skuValue = sku[skuKey]; // skuValue是sku的值
+        var skuKeyAttrs = skuKey.split(';'); //以分号分隔字符串'黑；16G；电信'为数组，结果为skuKeyAttrs=['黑','16G','电信']
+
+        //combArr=[[空属性 × 3],['黑', 空属性 × 2],[空白, '16G', 空白],[空属性 × 2, '电信'],['黑', '16G', 空白],['黑', 空白, '电信'],[空白, '16G', '电信'],['黑', '16G', '电信']]
         var combArr = skuItemToComb(skuKeyAttrs);
-        for (var j = 0; j < combArr.length; j++) {
-            var key = combArr[j].join(';');
-            if (resultSKU[key]) {
-                resultSKU[key].count += skuData.count;
-                resultSKU[key].prices.push(skuData.price);
+
+
+        // for (var j = 0; j < combArr.length; j++) {
+        //     var key = combArr[j].join(';');//以分号连接数组['黑', '16G', '电信']为字符串，结果为key='黑；16G；电信'
+
+        //     if (resultSKU[key]) {
+        //         resultSKU[key].count += skuValue.count;
+        //         resultSKU[key].prices.push(skuValue.price);
+        //     } else {
+        //         resultSKU[key] = {
+        //             count: skuValue.count,
+        //             prices: [skuValue.price]
+        //         };
+        //     }
+
+        // }
+        //查询resultSKU中是否已经存在某个skuKey，如果有则将相同的skuKey对应的skuValue.count相加，skuValue.price加入到prices数组中；如果没有则在resultSKU中添加该skuKey和skuValue，并设置skuValue.count和skuValue.prices
+        combArr.reduce((a, b) => {
+            if (a[b.join(';')]) {
+                //b为[ '','','' ]或[ '黑', '' , '' ]，
+                //b.join(';')为' ; ; '或'黑; ; '
+                a[b.join(';')].count += skuValue.count;
+                a[b.join(';')].prices.push(skuValue.count)
             } else {
-                resultSKU[key] = {
-                    count: skuData.count,
-                    prices: [skuData.price]
-                };
+                a[b.join(';')] = {
+                    count: skuValue.count,
+                    prices: [skuValue.price]
+                }
             }
-        }
+            return resultSKU
+        }, resultSKU)
     }
     return resultSKU;
 }
@@ -195,39 +217,39 @@ function checkSKU(resultSKU) {
 }
 
 //页面加载完毕才执行
-$(function () {
-    // 属性集
-    var key = [
-        { name: '颜色', item: ['黑', '金', '白'] },
-        { name: '内存', item: ['16G', '32G'] },
-        { name: '运营商', item: ['电信', '移动', '联通'] }
-    ];
-    // 数据集
-    var sku = {
-        '黑;16G;电信': { price: 100, count: 10 },
-        '黑;16G;移动': { price: 101, count: 11 },
-        '黑;16G;联通': { price: 102, count: 0 },
-        '黑;32G;电信': { price: 103, count: 13 },
-        '黑;32G;移动': { price: 104, count: 14 },
-        '黑;32G;联通': { price: 105, count: 0 },
-        '金;16G;电信': { price: 106, count: 16 },
-        '金;16G;移动': { price: 107, count: 17 },
-        '金;16G;联通': { price: 108, count: 18 },
-        '金;32G;电信': { price: 109, count: 0 },
-        '金;32G;移动': { price: 110, count: 20 },
-        '金;32G;联通': { price: 111, count: 21 },
-        '白;16G;电信': { price: 112, count: 0 },
-        '白;16G;移动': { price: 113, count: 23 },
-        '白;16G;联通': { price: 114, count: 24 },
-        '白;32G;电信': { price: 115, count: 0 },
-        '白;32G;移动': { price: 116, count: 26 },
-        '白;32G;联通': { price: 117, count: 27 }
-    };
-    var resultSKU = initSKU(sku);
-    initDOM(key);
-    checkSKU(resultSKU);
-    $('#sku input[type=button]:not(:disabled)').click(function (event) {
-        $(this).toggleClass('selected').siblings().removeClass('selected');
-        checkSKU(resultSKU);
-    });
-});
+// $(function () {
+//     // 属性集
+//     var key = [
+//         { name: '颜色', item: ['黑', '金', '白'] },
+//         { name: '内存', item: ['16G', '32G'] },
+//         { name: '运营商', item: ['电信', '移动', '联通'] }
+//     ];
+//     // 数据集
+//     var sku = {
+//         '黑;16G;电信': { price: 100, count: 10 },
+//         '黑;16G;移动': { price: 101, count: 11 },
+//         '黑;16G;联通': { price: 102, count: 0 },
+//         '黑;32G;电信': { price: 103, count: 13 },
+//         '黑;32G;移动': { price: 104, count: 14 },
+//         '黑;32G;联通': { price: 105, count: 0 },
+//         '金;16G;电信': { price: 106, count: 16 },
+//         '金;16G;移动': { price: 107, count: 17 },
+//         '金;16G;联通': { price: 108, count: 18 },
+//         '金;32G;电信': { price: 109, count: 0 },
+//         '金;32G;移动': { price: 110, count: 20 },
+//         '金;32G;联通': { price: 111, count: 21 },
+//         '白;16G;电信': { price: 112, count: 0 },
+//         '白;16G;移动': { price: 113, count: 23 },
+//         '白;16G;联通': { price: 114, count: 24 },
+//         '白;32G;电信': { price: 115, count: 0 },
+//         '白;32G;移动': { price: 116, count: 26 },
+//         '白;32G;联通': { price: 117, count: 27 }
+//     };
+//     var resultSKU = initSKU(sku);
+//     initDOM(key);
+//     checkSKU(resultSKU);
+//     $('#sku input[type=button]:not(:disabled)').click(function (event) {
+//         $(this).toggleClass('selected').siblings().removeClass('selected');
+//         checkSKU(resultSKU);
+//     });
+// });
