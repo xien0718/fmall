@@ -44,7 +44,6 @@ const regGetQueryValue = (url, key) => {
     }
 }
 let res = regGetQueryValue('1234?item_id=123', 'item_id')
-console.log(res);
 
 
 module.exports = {

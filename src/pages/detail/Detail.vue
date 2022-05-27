@@ -4,8 +4,8 @@
       <van-icon slot="left" name="arrow-left" @click="backToHome" />
       <div slot="mid">商品详情</div>
     </nav-bar>
-    <!-- <sku-final></sku-final> -->
-    <sku></sku>
+    <sku-self></sku-self>
+    <!-- <sku></sku> -->
     <!-- <div class="goods-item-info">{{goodsItemInfo.base_info.product_name}}</div> -->
     <van-sku
       v-model="skuShow"
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-// import SkuFinal from "components/sku/SkuFinal";
-import Sku from "components/sku/Sku";
+import SkuSelf from "components/sku/SkuSelf";
+// import Sku from "components/sku/Sku";
 import { getGoodsDetail } from "network/detail";
 import { regGetParams } from "utils/getParams";
 import NavBar from "components/navbar/Navbar";
@@ -233,8 +233,8 @@ export default {
     };
   },
   components: {
-    // SkuFinal,
-    Sku,
+    SkuSelf,
+    // Sku,
     NavBar,
   },
   created() {

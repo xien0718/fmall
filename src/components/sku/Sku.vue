@@ -52,11 +52,11 @@ export default {
         .stock;
     },
     show_price() {
-      let comb_prices =
+      let select_prices =
         this.count_skuComb_SP_res[Object.values(this.selectSpec).join(";")]
-          .prices;
-      this.min_price = Math.min.apply(null, comb_prices);
-      this.max_price = Math.max.apply(null, comb_prices);
+          .prices; //从 所有组合中 取出 已选规格值 对应的价格数组
+      this.min_price = Math.min.apply(null, select_prices);
+      this.max_price = Math.max.apply(null, select_prices);
       return this.min_price == this.max_price
         ? `${this.min_price}`
         : `${this.min_price}~${this.max_price}`;

@@ -1,10 +1,10 @@
 //spec规格数据
 //spec_key规格键：颜色
 //spec_value_all所有的规格值：红色、紫色、白色、黑色
-const spec = [
-    { spec_key: "颜色", spec_value_all: ["红色", "紫色", "白色", "黑色"] },
-    { spec_key: "套餐", spec_value_all: ["套餐一", "套餐二", "套餐三", "套餐四"] },
-    { spec_key: "内存", spec_value_all: ["64G", "128G", "256G"] }
+const original_spec = [
+    { original_spec_item_key: "颜色", original_spec_item_value_all: ["红色", "紫色", "白色", "黑色"] },
+    { original_spec_item_key: "套餐", original_spec_item_value_all: ["套餐一", "套餐二", "套餐三", "套餐四"] },
+    { original_spec_item_key: "存储", original_spec_item_value_all: ["64G", "128G", "256G"] }
 ]
 
 
@@ -43,14 +43,14 @@ const sku = {
 }
 
 
-export { spec, sku }
+export { original_spec, sku }
 
 let SPEC = [//this.spec
     {
-        "spec_key": "颜色",
-        "spec_value_all": [
+        "spec_item_key": "颜色",
+        "spec_item_value_all": [
             {
-                "spec_value": "红色",
+                "spec_item_value": "红色",
                 "able": true
             },
             {

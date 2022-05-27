@@ -172,9 +172,9 @@ function count_skuComb_SP(sku) {//S代表stock，P代表price
     let count_skuComb_SP_res = {};//统计结果保存至count_skuComb_SP_res
     let skuKeys = Object.keys(sku)
     //skuKeys=[["红色", "套餐一", "128G"],["红色", "套餐一", "256G"]...]
-    skuKeys.forEach((item) => {
+    skuKeys.forEach((skuKey) => {
         //将skuKey以分号分隔为数组
-        let skuItem_str_to_arr = item.split(';')
+        let skuItem_str_to_arr = skuKey.split(';')
         //使用skuItemToComb函数得到当前商品的所有组合skuItemComb                
         let skuItemComb = skuItemToComb(skuItem_str_to_arr)
         //// skuItemComb = [[空属性 × 3],['黑', 空属性 × 2],[空白, '16G', 空白],[空属性 × 2, '电信'],['黑', '16G', 空白],['黑', 空白, '电信'],[空白, '16G', '电信'],['黑', '16G', '电信']]
