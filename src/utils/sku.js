@@ -42,8 +42,14 @@ const sku = {
     "黑色;套餐四;256G": { id: 1608188117224, price: 128, stock: 38 }
 }
 
+//附加属性，可以多选
+const attach_spec = [
+    { attach_spec_item_key: '灯饰', attach_spec_item_value_all: ['蓝色', '黄色', '粉色'] },
+    { attach_spec_item_key: '糖果', attach_spec_item_value_all: ['蓝色', '黄色', '粉色'] }
 
-export { original_spec, sku }
+]
+
+export { original_spec, sku, attach_spec }
 
 let SPEC = [//this.spec
     {

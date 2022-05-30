@@ -7,33 +7,6 @@
     <sku-self></sku-self>
     <!-- <sku></sku> -->
     <!-- <div class="goods-item-info">{{goodsItemInfo.base_info.product_name}}</div> -->
-    <van-sku
-      v-model="skuShow"
-      :sku="sku"
-      :goods="goods"
-      :quota="quota"
-      :quota-used="quotaUsed"
-      :hide-stock="sku.hide_stock"
-      :custom-stepper-config="customStepperConfig"
-      :stock-threshold="kuCunFaZhi"
-      :initial-sku="initialSku"
-      :hide-selected-text="false"
-      :show-add-cart-btn="false"
-      :buy-text="'确定'"
-      :properties="fujiaguige"
-      @buy-clicked="toFillOrder"
-    />
-    <van-goods-action>
-      <van-goods-action-icon icon="chat-o" text="客服" color="#ee0a24" />
-      <van-goods-action-icon icon="cart-o" text="购物车" />
-      <van-goods-action-icon icon="star" text="已收藏" color="#ff5000" />
-      <van-goods-action-button
-        type="warning"
-        text="加入购物车"
-        @click="addToCart"
-      />
-      <van-goods-action-button type="danger" text="立即购买" @click="toBuy" />
-    </van-goods-action>
   </div>
 </template>
 
