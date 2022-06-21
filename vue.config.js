@@ -104,7 +104,7 @@ module.exports = {
         ws: true, //websocket
         changeOrigin: true, //是否跨域
         pathRewrite: {} //url无需重写直接拼接
-      }
+      },
       // '^/api': {
       //   target: 'http://learn-vue.natapp1.cc',
       //   ws: true,
@@ -112,6 +112,13 @@ module.exports = {
       //   pathRewrite: {
       //     '^/api': ''
       //   }
+      // },
+      // '^/assets': {
+      //   //   将http://localhost:3333替换成target
+      //   target: 'file://',
+      //   ws: true,
+      //   changeOrigin: true,
+      //   pathRewrite: {},
       // },
     },
   },
@@ -129,13 +136,38 @@ module.exports = {
       }
     }
   },
-  configureWebpack: config => {
-    // 11-02配置vux失败，弃用vux
-    // vuxLoader.merge(config, {
-    //   plugins: ['vux-ui', {
-    //     name: 'less-theme',
-    //     path: './src/theme.less'
-    //   }]
-    // })
-  },
+
+  //webpack的loader配置
+  // configureWebpack: config => {
+  //   // 11-02配置vux失败，弃用vux
+  //   // vuxLoader.merge(config, {
+  //   //   plugins: ['vux-ui', {
+  //   //     name: 'less-theme',
+  //   //     path: './src/theme.less'
+  //   //   }]
+  //   // })
+
+  //   //url-loader配置
+  //   // config.module.rules.push(
+  //   //   {
+  //   //     test: /\.(png|jpg|gif)$/i,
+  //   //     use: [
+  //   //       {
+  //   //         loader: 'url-loader',
+  //   //         options: {
+  //   //           limit: 8192,
+  //   //         },
+  //   //       },
+  //   //     ],
+  //   //   },
+  //   //   {
+  //   //     test: /\.(png|jpe?g|gif)$/i,
+  //   //     use: [
+  //   //       {
+  //   //         loader: 'file-loader',
+  //   //       },
+  //   //     ],
+  //   //   },
+  //   // )
+  // },
 }

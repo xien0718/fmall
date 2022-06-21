@@ -1,5 +1,10 @@
 <template>
   <div class="sku">
+    <!-- 展示选中的商品的图片 -->
+    <!-- 如果没有对应的商品图片，则显示默认图片 -->
+    <div class="goods_picture">
+      <img :src="goods_picture" alt="" />
+    </div>
     <!-- 下面是商品规格键值goods_spec -->
     <div class="goods_spec">
       <div class="price_stock">
@@ -77,6 +82,7 @@
 
 <script>
 import { original_spec, sku, attach_spec } from "utils/sku";
+import goods_img from "assets/img/goods/白色-套餐二-64G.png";
 export default {
   name: "SkuSelf",
   data() {
@@ -219,6 +225,26 @@ export default {
     //展示库存
     stock() {
       return this.skuComb_SP_list[this.select_spec_values_str].stock;
+    },
+    //商品图
+    //只有所有的规格键都选择了规格值，才展示对应的商品图。即
+    //否则展示默认图
+    goods_picture() {
+      //已选的规格值的数量
+      let i = Object.values(this.select_spec).reduce(
+        (counter, select_spec_value_item) => {
+          //如果  选择的规格值 为真(即不为空)，则counter++
+          if (select_spec_value_item) {
+            counter++;
+          }
+          return counter;
+        },
+        0
+      );
+      //若所有的规格键对应的额规格值都选了，
+      return i == original_spec.length
+        ? this.sku[this.select_spec_values_str].picture
+        : "https://xien0718.oss-cn-beijing.aliyuncs.com/goods/default.png";
     },
   },
   methods: {
@@ -385,11 +411,22 @@ export default {
 .sku {
   background-color: #fff;
   padding-top: 10px;
+  .goods_picture {
+    margin: 0 auto;
+    width: 500px;
+    height: 500px;
+    margin: 60px auto;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
   .goods_spec {
     .price_stock {
       font-size: 40px;
       display: flex;
       justify-content: space-around;
+      margin: 40px 0;
     }
     .spec_item {
       .spec_item_key {
@@ -398,6 +435,7 @@ export default {
       .spec_item_value_all {
         display: flex;
         .spec_item_value {
+          border: 1px solid #ffffff;
           background-color: #f6f6f6;
           color: #989898;
           margin: 10px;
