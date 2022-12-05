@@ -1,12 +1,33 @@
 <template>
-  <div>
+  <div class="detail">
     <nav-bar>
       <van-icon slot="left" name="arrow-left" @click="backToHome" />
       <div slot="mid">商品详情</div>
     </nav-bar>
+    <pop-up></pop-up>
+
     <sku-self></sku-self>
+
     <!-- <sku></sku> -->
     <!-- <div class="goods-item-info">{{goodsItemInfo.base_info.product_name}}</div> -->
+
+    <!-- 底部立即购买栏 -->
+    <van-goods-action>
+      <van-goods-action-icon icon="chat-o" text="客服" />
+      <van-goods-action-icon icon="cart-o" text="购物车" />
+      <van-goods-action-button
+        color="#be99ff"
+        type="warning"
+        text="加入购物车"
+      />
+      <van-goods-action-button
+        color="#7232dd"
+        type="danger"
+        text="立即购买"
+        @click="toBuy"
+      />
+      <!-- 点击立即购买弹出的遮罩层 -->
+    </van-goods-action>
   </div>
 </template>
 
@@ -16,6 +37,7 @@ import SkuSelf from "components/sku/SkuSelf";
 import { getGoodsDetail } from "network/detail";
 import { regGetParams } from "utils/getParams";
 import NavBar from "components/navbar/Navbar";
+import PopUp from "components/popUp/PopUp";
 export default {
   name: "Detail",
   data() {
@@ -28,7 +50,7 @@ export default {
           "http://saidad.oss-cn-guangzhou.aliyuncs.com/image/58de02e0c1f3480bf2190c5e944ddefb.jpeg",
       },
       // goodsId: 1, //目前没发现有啥用
-      skuShow: false, //sku是否展示
+      skuIsShow: false, //sku是否展示
       quota: 5, //限购数量
       quotaUsed: 0, //已购数量
       //商品规格数据
@@ -209,6 +231,7 @@ export default {
     SkuSelf,
     // Sku,
     NavBar,
+    PopUp,
   },
   created() {
     //当详情页面加载的时候请求对应商品的数据
@@ -231,11 +254,11 @@ export default {
     },
     //点击加入购物车按钮
     addToCart() {
-      this.skuShow = true;
+      this.skuIsShow = true;
     },
     //点击立即购买按钮，下面弹出选项体，跳转到创建订单页面
     toBuy() {
-      this.skuShow = true;
+      this.skuIsShow = true;
     },
     //选好规格以后点击规格菜单的确定按钮
     //skuData就是客户选中的商品规格和附加
@@ -253,5 +276,7 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
+.detail {
+}
 </style>
