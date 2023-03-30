@@ -8,6 +8,10 @@
 	touch-action: none;
 }
 
+:root {
+	--color-main: #00b799;
+}
+
 html,
 body,
 div,

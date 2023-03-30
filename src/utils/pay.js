@@ -22,16 +22,36 @@ export const wxPay = (param1, param2) => {
             }
         );
     }
-    //如果不是微信浏览器，当监听到WeixinJSBridgeReady(与click同类型)的时候，调用支付方法
+    //如果不是微信浏览器，处理兼容问题
     if (typeof WeixinJSBridge == "undefined") {
+        //有DOM2.0的addEventListener则用，事件不加on，
         if (document.addEventListener) {
             document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-        } else if (document.attachEvent) {
+        }
+        //没有DOM2.0的addEventListener则使用IE5+的attachEvent，事件要加on
+        else if (document.attachEvent) {
             document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
             document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
         }
-        //如果是微信浏览器，直接调用支付方法    
-    } else {
+
+
+    }
+    //如果是微信浏览器，直接调用支付方法    
+    else {
         onBridgeReady();
+    }
+}
+
+function addEvent(elm, evType, fn, useCapture) {
+    if (elm.addEventListener) {
+        elm.addEventListener(evType, fn, useCapture);//DOM2.0
+        return true;
+    }
+    else if (elm.attachEvent) {
+        var r = elm.attachEvent(`on` + evType, fn);//IE5+
+        return r;
+    }
+    else {
+        elm['on' + evType] = fn;//DOM 0
     }
 }

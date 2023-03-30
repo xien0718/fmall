@@ -4,7 +4,8 @@ export default [{
     name: 'Detail',
     meta: {
         title: '详情',
-        showTabbar: false
+        showTabbar: false,
+        keepAlive: false
 
     },
     component: Detail

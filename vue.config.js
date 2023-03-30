@@ -123,6 +123,7 @@ module.exports = {
     },
   },
   css: {
+    //移动端适配方案之postcss,用于将px转化为rem
     loaderOptions: {
       postcss: {
         plugins: [
